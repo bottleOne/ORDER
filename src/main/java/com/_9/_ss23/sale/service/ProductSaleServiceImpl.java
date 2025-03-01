@@ -18,11 +18,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductSaleServiceImpl implements SaleService<Product> {
 
-    private final ProductService productService;
-    private final OrderService orderService;
     @Override
     public void sale(List<OrderResponse> orderResponse) {
-        Order order = orderService.getOrder(orderResponse.getFirst().getOrderId());
         /**
          * TODO 결제로직
          */
