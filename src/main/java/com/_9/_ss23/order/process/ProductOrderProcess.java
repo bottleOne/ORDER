@@ -1,6 +1,8 @@
 package com._9._ss23.order.process;
 
+import com._9._ss23.order.dto.OrderRequest;
 import com._9._ss23.order.dto.OrderResponse;
+import com._9._ss23.order.dto.ProductOrderRequest;
 import com._9._ss23.order.dto.ProductReqeust;
 import com._9._ss23.order.service.OrderService;
 import com._9._ss23.product.domain.Product;
@@ -17,28 +19,34 @@ import java.util.stream.Collectors;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class ProductOrderProcess extends AbstractProductOrderProcess<ProductReqeust> {
+public class ProductOrderProcess extends AbstractProductOrderProcess<ProductOrderRequest> {
 
     private final ProductService productService;
     @Override
-    protected List<OrderResponse> process(ProductReqeust ...requests) {
-        List<ProductReqeust> reqeustList = Arrays.stream(requests).toList();
+    protected List<OrderResponse> process(ProductOrderRequest...requests) {
+        List<ProductOrderRequest> reqeustList = Arrays.stream(requests).toList();
         List<Long> productNums = reqeustList.stream()
-                .map(ProductReqeust::getProductNumber)
+                .map(ProductOrderRequest::getItemNumber)
                 .collect(Collectors.toList());
 
         List<Product> products = productService.getProducts(productNums);
 
-        return reqeustList.stream().map(r -> {
-            Product product = products.stream()
-                    .filter(p -> p.getId().equals(r.getProductNumber()))
-                    .findFirst()
-                    .orElse(Product.emptyProduct());
-
-            productService.checkProduct(product, r.getProductQuantity());
-            orderService.orderItem(product, r.getProductQuantity());
-
-            return ProductOrderResponse.newProductOrderResponse(product.getProductName(), product.getProductQuantity());
+        List<ProductOrderRequest> checkedProducts = reqeustList.stream().map(r -> {
+           return checkProduct(products, r);
         }).collect(Collectors.toList());
+
+        return orderService.order(checkedProducts);
+    }
+
+    private ProductOrderRequest checkProduct(List<Product> products, ProductOrderRequest request){
+        Product product = products.stream()
+                .filter(p -> p.getId().equals(request.getItemNumber()))
+                .findFirst()
+                .orElse(Product.emptyProduct());
+
+        productService.checkProduct(product, request.getOrderItemCnt());
+        request.setProduct(product);
+
+        return request;
     }
 }

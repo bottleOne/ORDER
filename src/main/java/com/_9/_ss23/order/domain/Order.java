@@ -1,17 +1,16 @@
-package com._9._ss23.order;
+package com._9._ss23.order.domain;
 
-import com._9._ss23.order.code.OrderState;
-import com._9._ss23.product.domain.Product;
+import com._9._ss23.order.domain.ProductOrder;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity @Getter
+@NoArgsConstructor
 public class Order {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id @Column(name = "order_id")
@@ -20,4 +19,15 @@ public class Order {
     private List<ProductOrder> productOrders;
     private LocalDateTime orderDate;
     private LocalDateTime cancelDate;
+
+    public Order(LocalDateTime orderDate){
+        this.orderDate = orderDate;
+    }
+
+    public void addProductOrder(ProductOrder productOrder) {
+        if(this.productOrders == null){
+            this.productOrders = new ArrayList<>();
+        }
+        this.productOrders.add(productOrder);
+    }
 }

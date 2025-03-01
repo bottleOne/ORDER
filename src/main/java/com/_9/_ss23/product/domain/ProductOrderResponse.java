@@ -5,13 +5,16 @@ import lombok.*;
 
 @Getter @Setter
 public class ProductOrderResponse extends OrderResponse {
-    private String productNm;
-    private int orderedProductCount;
-    public ProductOrderResponse(String productNm, int orderedProductCount){
-        this.productNm = productNm;
-        this.orderedProductCount = orderedProductCount;
+    private String itemNm;
+
+    public ProductOrderResponse(Long orderId, Long productId, String productNm, int orderedProductCount){
+        this.orderId = orderId;
+        this.itemId = productId;
+        this.itemNm = productNm;
+        this.orderedItemCount = orderedProductCount;
     }
-    public static ProductOrderResponse newProductOrderResponse(String productNm, int orderedProductCount){
-        return new ProductOrderResponse(productNm, orderedProductCount);
+    public static ProductOrderResponse newProductOrderResponse(Long oderId, Long productId,String productNm, int orderedProductCount){
+        return new ProductOrderResponse(oderId, productId, productNm, orderedProductCount);
     }
+
 }

@@ -1,13 +1,7 @@
 package com._9._ss23.product.domain;
 
-import com._9._ss23.order.Order;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.lang.classfile.Label;
 
 @Entity @Getter
 public class Product {

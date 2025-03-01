@@ -1,21 +1,20 @@
-package com._9._ss23.order;
+package com._9._ss23.order.domain;
 
 import com._9._ss23.order.code.OrderState;
 import com._9._ss23.product.domain.Product;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity @Getter
+@NoArgsConstructor
 public class ProductOrder {
 
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id @Column(name = "product_order_id")
     private Long id;
 
-    private int countItems;
+    private int itemCount;
 
     @Enumerated(EnumType.STRING)
     private OrderState orderState;
@@ -27,4 +26,12 @@ public class ProductOrder {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
+
+    public ProductOrder(Order order, Product product, int itemCount, OrderState orderState){
+        this.order = order;
+        this.product = product;
+        this.itemCount = itemCount;
+        this.orderState = orderState;
+        order.addProductOrder(this);
+    }
 }
