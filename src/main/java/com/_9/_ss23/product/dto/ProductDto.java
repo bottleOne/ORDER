@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@AllArgsConstructor
-@Builder
 public class ProductDto {
     private Long productNumber;
 
@@ -20,13 +18,19 @@ public class ProductDto {
 
     private int orderCount;
 
+    public ProductDto(Long productNumber, String productName, int productPrice, int productQuantity) {
+        this.productNumber = productNumber;
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productQuantity = productQuantity;
+        this.orderCount = 0;
+    }
+
     public static ProductDto to(Product product){
-        return ProductDto.builder()
-                .productNumber(product.getId())
-                .productName(product.getProductName())
-                .productPrice(product.getProductPrice())
-                .productQuantity(product.getProductQuantity())
-                .build();
+        return  new ProductDto(product.getId(),
+                product.getProductName(),
+                product.getProductPrice(),
+                product.getProductQuantity());
     }
 
     public ProductDto setOrderCount(int orderCount){

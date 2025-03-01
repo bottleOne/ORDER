@@ -10,9 +10,6 @@ import lombok.NoArgsConstructor;
 import java.lang.classfile.Label;
 
 @Entity @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class Product {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "product_number")
@@ -24,12 +21,14 @@ public class Product {
 
     private int productQuantity;
 
+    public Product (){
+    }
     public Product minusQuantity(int stock){
         this.productQuantity = this.productQuantity - stock;
         return this;
     }
     public static Product emptyProduct(){
-        return Product.builder().build();
+        return new Product();
     }
 
     public boolean isEmpty(){

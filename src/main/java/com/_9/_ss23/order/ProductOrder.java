@@ -5,11 +5,10 @@ import com._9._ss23.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity @Getter
 public class ProductOrder {
 
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
