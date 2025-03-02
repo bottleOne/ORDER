@@ -1,6 +1,7 @@
 package com._9._ss23.order.process;
 
 import com._9._ss23.order.OrderException;
+import com._9._ss23.order.dto.OrderRequest;
 import com._9._ss23.order.dto.OrderResponse;
 import com._9._ss23.order.service.OrderService;
 import com._9._ss23.sale.service.SaleService;
@@ -13,15 +14,12 @@ import java.util.List;
 
 @Component
 @Slf4j
-public abstract class AbstractProductOrderProcess<T> implements OrderProcessInterface<T>{
-
+public abstract class AbstractProductOrderProcess<T extends OrderRequest> implements OrderProcessInterface<T>{
     protected  OrderService orderService;
-    protected SaleService saleService;
+
     @Override
-    public List<OrderResponse> orderProcess(T ...requests){
+    public List<OrderResponse> orderProcess(List<T> requests){
         try{
-            List<OrderResponse> process = process(requests);
-            saleService.sale(process);
             return process(requests);
         }catch (OrderException e){
             log.error(e.getMessage());
@@ -30,5 +28,5 @@ public abstract class AbstractProductOrderProcess<T> implements OrderProcessInte
         return new ArrayList<>();
     }
 
-    protected abstract List<OrderResponse> process(T ...requests);
+    protected abstract List<OrderResponse> process(List<T> requests);
 }

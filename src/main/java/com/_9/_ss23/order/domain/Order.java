@@ -11,11 +11,12 @@ import java.util.List;
 
 @Entity @Getter
 @NoArgsConstructor
+@Table(name = "ORDERS")
 public class Order {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id @Column(name = "order_id")
     private Long id;
-    @OneToMany(mappedBy = "product_order_id", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<ProductOrder> productOrders;
     private LocalDateTime orderDate;
     private LocalDateTime cancelDate;

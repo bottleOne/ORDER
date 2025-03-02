@@ -5,7 +5,7 @@ import lombok.*;
 
 @Getter @Setter
 public class ProductOrderResponse extends OrderResponse {
-    private String itemNm;
+
 
     public ProductOrderResponse(Long orderId, Long productId, String productNm, int orderedProductCount){
         this.orderId = orderId;

@@ -23,9 +23,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ProductOrderServiceImpl implements OrderService<ProductOrderRequest>{
+public class ProductOrderServiceImpl implements ProductOrderService{
 
-    private final ProductService productService;
     private final OrderRepository orderRepository;
     private final ProductOrderRepository productOrderRepository;
     @Override
