@@ -30,6 +30,7 @@ public class ProductSaleServiceImpl implements SaleService<Product> {
                     products.stream()
                             .filter(p -> p.getId().equals(r.getItemId()))
                             .findFirst().get()
+                            .getId()
                     , r.getOrderedItemCount()
             );
         });

@@ -13,5 +13,5 @@ public interface ProductService {
 
     void checkProduct(Product product, int orderProductCount);
 
-    Product reduceProductCount(Product item, int itemQuantity);
+    Product reduceProductCount(Long itemId, int itemQuantity);
 }

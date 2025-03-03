@@ -99,7 +99,10 @@ public class testOrderProcess {
         CountDownLatch countDownLatch = new CountDownLatch(10); // 준비 카운트
         CountDownLatch countDownLatch1 = new CountDownLatch(1); // 요청 카운트
         CountDownLatch countDownLatch2 = new CountDownLatch(10); //완료카운트
+        int productQ = productService.getProduct(213341L).getProductQuantity();
         ProductOrderRequest request = new ProductOrderRequest(213341L, 1);
+
+
         Runnable task = new WaitingWorker(
                 request,countDownLatch, countDownLatch1, countDownLatch2);
 
@@ -114,7 +117,7 @@ public class testOrderProcess {
 
         Product product = productService.getProduct(213341L);
 
-        assertEquals(product.getProductQuantity(), 40);
+        assertEquals(product.getProductQuantity(), productQ-10);
     }
 
     @Test
@@ -127,9 +130,10 @@ public class testOrderProcess {
         int initialStock = product.getProductQuantity();
 
         for (int i = 0; i < threadCount; i++) {
+
             executorService.execute(() -> {
                 try {
-                    productService.reduceProductCount(product, 1);
+                    productService.reduceProductCount(213341L, 1);
                 } finally {
                     latch.countDown();
                 }
@@ -140,8 +144,6 @@ public class testOrderProcess {
         executorService.shutdown();
 
         Product updatedProduct = productService.getProduct(product.getId());
-        //log.info("최종 재고: {}", updatedProduct.getProductQuantity());
-
         assertEquals(initialStock - threadCount, updatedProduct.getProductQuantity()); // 🔥 최종 재고 검증
     }
 
