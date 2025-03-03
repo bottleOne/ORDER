@@ -16,11 +16,12 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id @Column(name = "order_id")
     private Long id;
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductOrder> productOrders;
     private LocalDateTime orderDate;
     private LocalDateTime cancelDate;
-
+    @Version
+    private Long version;
     public Order(LocalDateTime orderDate){
         this.orderDate = orderDate;
     }

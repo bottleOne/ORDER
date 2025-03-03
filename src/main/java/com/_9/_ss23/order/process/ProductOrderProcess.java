@@ -26,7 +26,7 @@ public class ProductOrderProcess extends AbstractProductOrderProcess<ProductOrde
     }
 
     @Override
-    protected List<OrderResponse> process(List<ProductOrderRequest> requests) {
+    protected synchronized List<OrderResponse> process(List<ProductOrderRequest> requests) {
         List<Long> productNums = requests.stream()
                 .map(ProductOrderRequest::getItemNumber)
                 .collect(Collectors.toList());

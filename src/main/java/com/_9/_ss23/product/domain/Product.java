@@ -15,10 +15,12 @@ public class Product {
 
     private int productQuantity;
 
+    @Version
+    private Long version;
     public Product (){
     }
     public Product minusQuantity(int stock){
-        this.productQuantity = this.productQuantity - stock;
+        this.productQuantity -= stock;
         return this;
     }
     public static Product emptyProduct(){

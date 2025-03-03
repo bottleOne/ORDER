@@ -8,11 +8,13 @@ import com._9._ss23.sale.service.SaleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Transactional
 @Slf4j
 public abstract class AbstractProductOrderProcess<T extends OrderRequest> implements OrderProcessInterface<T>{
     protected  OrderService orderService;

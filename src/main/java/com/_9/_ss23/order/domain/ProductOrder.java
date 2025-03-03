@@ -27,6 +27,8 @@ public class ProductOrder {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @Version
+    private Long version;
     public ProductOrder(Order order, Product product, int itemCount, OrderState orderState){
         this.order = order;
         this.product = product;
