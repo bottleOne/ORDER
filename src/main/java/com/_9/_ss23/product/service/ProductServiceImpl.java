@@ -47,8 +47,9 @@ public class ProductServiceImpl implements ProductService{
     @Override
     @Transactional
     @Retryable(value = ObjectOptimisticLockingFailureException.class, maxAttempts = 5, backoff = @Backoff(delay = 100))
-    public Product reduceProductCount(Product product, int itemQuantity) {
-            checkProduct(product, itemQuantity);
+    public Product reduceProductCount(Long productId, int itemQuantity) {
+        Product product = getProduct(productId);
+        checkProduct(product, itemQuantity);
             Product save = productRepository.save(product.minusQuantity(itemQuantity));
             return save;
     }
