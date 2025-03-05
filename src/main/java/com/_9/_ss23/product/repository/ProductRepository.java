@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
     @Lock(LockModeType.OPTIMISTIC)
     Optional<Product> findById(Long id);
+
     Product save(Product product);
 }
