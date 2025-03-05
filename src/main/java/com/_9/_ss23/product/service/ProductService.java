@@ -8,10 +8,10 @@ public interface ProductService {
 
     List<Product> getAllProduct();
 
-    Product getProduct(Long productNum);
+    Product getProduct(Long productNum) throws InterruptedException;
     List<Product> getProducts(List<Long> productNums);
 
     void checkProduct(Product product, int orderProductCount);
 
-    Product reduceProductCount(Long itemId, int itemQuantity);
+    void reduceProductCount(Long itemId, int itemQuantity) throws InterruptedException;
 }

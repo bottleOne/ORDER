@@ -18,7 +18,7 @@ public class ProductSaleServiceImpl implements SaleService<Product> {
 
     private final ProductService productService;
     @Override
-    public  void sale(List<OrderResponse> orderResponse) {
+    public synchronized void sale(List<OrderResponse> orderResponse) {
         List<Long> productIds = orderResponse.stream()
                 .map(OrderResponse::getItemId)
                 .collect(Collectors.toList());
@@ -26,13 +26,17 @@ public class ProductSaleServiceImpl implements SaleService<Product> {
         List<Product> products = productService.getProducts(productIds);
 
         orderResponse.stream().forEach(r -> {
-            productService.reduceProductCount(
-                    products.stream()
-                            .filter(p -> p.getId().equals(r.getItemId()))
-                            .findFirst().get()
-                            .getId()
-                    , r.getOrderedItemCount()
-            );
+            try {
+                productService.reduceProductCount(
+                        products.stream()
+                                .filter(p -> p.getId().equals(r.getItemId()))
+                                .findFirst().get()
+                                .getId()
+                        , r.getOrderedItemCount()
+                );
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 }

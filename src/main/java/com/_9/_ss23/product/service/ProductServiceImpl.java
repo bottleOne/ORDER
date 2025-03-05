@@ -11,9 +11,11 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional @Slf4j
@@ -28,9 +30,15 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Product getProduct(Long productNum) {
-        return productRepository.findById(productNum).orElse(Product.emptyProduct());
+    @Transactional
+    public Product getProduct(Long productNum) throws InterruptedException {
+        try {
+            return productRepository.findById(productNum).get();
+        }catch (ObjectOptimisticLockingFailureException e){
+            log.error("동시성이슈 발생123");
+            //TimeUnit.MILLISECONDS.sleep(1000);
+            return getProduct(productNum);
+        }
     }
 
     @Override
@@ -39,19 +47,31 @@ public class ProductServiceImpl implements ProductService{
             return productRepository.selectProducts(productNums);
         }catch (ObjectOptimisticLockingFailureException e){
             log.error("품목조회 동시성");
-            return  getProducts(productNums);
+            return getProducts(productNums);
         }
-
     }
 
     @Override
-    @Transactional
-    @Retryable(value = ObjectOptimisticLockingFailureException.class, maxAttempts = 5, backoff = @Backoff(delay = 100))
-    public Product reduceProductCount(Long productId, int itemQuantity) {
+    //@Retryable(value = ObjectOptimisticLockingFailureException.class, maxAttempts = 5, backoff = @Backoff(delay = 100))
+    public void reduceProductCount(Long productId, int itemQuantity) throws InterruptedException {
         Product product = getProduct(productId);
-        checkProduct(product, itemQuantity);
-            Product save = productRepository.save(product.minusQuantity(itemQuantity));
-            return save;
+        try{
+            checkProduct(product, itemQuantity);
+            saveProduct(product.minusQuantity(itemQuantity));
+        }catch (ObjectOptimisticLockingFailureException e){
+            log.error("동시성 이슈 이새끼야");
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveProduct(Product product){
+        try {
+            log.error("뭐가 그리 불만이길래 저장이 안돼는거야!!!!!={}", product.getProductQuantity());
+            productRepository.save(product);
+            productRepository.flush();
+        }catch (ObjectOptimisticLockingFailureException e){
+            log.info("품목저장 동시성");
+        }
     }
 
     @Override

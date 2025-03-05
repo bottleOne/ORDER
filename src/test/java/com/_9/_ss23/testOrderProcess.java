@@ -1,18 +1,18 @@
 package com._9._ss23;
 
-import com._9._ss23.order.OrderException;
 import com._9._ss23.order.dto.OrderResponse;
 import com._9._ss23.order.dto.ProductOrderRequest;
 import com._9._ss23.order.process.ProductOrderProcess;
 import com._9._ss23.product.domain.Product;
 import com._9._ss23.product.service.ProductService;
+import com._9._ss23.sale.service.ProductSaleServiceImpl;
 import com._9._ss23.sale.service.SaleService;
 
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -32,7 +32,7 @@ public class testOrderProcess {
     ProductOrderProcess orderProcess;
 
     @Autowired
-    SaleService saleService;
+    ProductSaleServiceImpl saleService;
 
     @Autowired
     ProductService productService;
@@ -134,6 +134,10 @@ public class testOrderProcess {
             executorService.execute(() -> {
                 try {
                     productService.reduceProductCount(213341L, 1);
+                }catch (ObjectOptimisticLockingFailureException e){
+
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 } finally {
                     latch.countDown();
                 }
