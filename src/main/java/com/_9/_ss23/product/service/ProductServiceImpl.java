@@ -30,15 +30,15 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    @Transactional
-    public Product getProduct(Long productNum) throws InterruptedException {
-        try {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Product getProduct(Long productNum)  {
+        //try {
             return productRepository.findById(productNum).get();
-        }catch (ObjectOptimisticLockingFailureException e){
+        /*}catch (ObjectOptimisticLockingFailureException e){
             log.error("동시성이슈 발생123");
             //TimeUnit.MILLISECONDS.sleep(1000);
             return getProduct(productNum);
-        }
+        }*/
     }
 
     @Override
@@ -62,13 +62,13 @@ public class ProductServiceImpl implements ProductService{
             log.error("동시성 이슈 이새끼야");
         }
     }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    //@Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveProduct(Product product){
         try {
             log.error("뭐가 그리 불만이길래 저장이 안돼는거야!!!!!={}", product.getProductQuantity());
+            //productRepository.flush();
             productRepository.save(product);
-            productRepository.flush();
+            //productRepository.update(product.getProductQuantity(), product.getId());
         }catch (ObjectOptimisticLockingFailureException e){
             log.info("품목저장 동시성");
         }
