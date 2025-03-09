@@ -5,6 +5,8 @@ import com._9._ss23.product.domain.Product;
 import com._9._ss23.product.domain.QProduct;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
+import org.springframework.data.jpa.repository.Lock;
 
 
 import java.util.List;
@@ -18,6 +20,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom{
         this.queryFactory = new JPAQueryFactory(em);
     }
     @Override
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public List<Product> selectProducts(List<Long> productNum) {
 
        return queryFactory.selectFrom(product)

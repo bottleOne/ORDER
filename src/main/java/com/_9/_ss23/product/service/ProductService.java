@@ -1,6 +1,8 @@
 package com._9._ss23.product.service;
 
 import com._9._ss23.product.domain.Product;
+import jakarta.persistence.LockModeType;
+import org.springframework.data.jpa.repository.Lock;
 
 import java.util.List;
 
@@ -9,6 +11,7 @@ public interface ProductService {
     List<Product> getAllProduct();
 
     Product getProduct(Long productNum) throws InterruptedException;
+
     List<Product> getProducts(List<Long> productNums);
 
     void checkProduct(Product product, int orderProductCount);

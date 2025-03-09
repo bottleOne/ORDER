@@ -42,6 +42,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public List<Product> getProducts(List<Long> productNums){
         try{
             return productRepository.selectProducts(productNums);
@@ -62,13 +63,13 @@ public class ProductServiceImpl implements ProductService{
             log.error("동시성 이슈 이새끼야");
         }
     }
-    //@Transactional(propagation = Propagation.REQUIRES_NEW)
+
     public void saveProduct(Product product){
         try {
             log.error("뭐가 그리 불만이길래 저장이 안돼는거야!!!!!={}", product.getProductQuantity());
-            //productRepository.flush();
+           // productRepository.flush();
             productRepository.save(product);
-            //productRepository.update(product.getProductQuantity(), product.getId());
+           // productRepository.update(product.getProductQuantity(), product.getId());
         }catch (ObjectOptimisticLockingFailureException e){
             log.info("품목저장 동시성");
         }

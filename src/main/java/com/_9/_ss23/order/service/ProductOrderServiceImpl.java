@@ -59,7 +59,6 @@ public class ProductOrderServiceImpl implements ProductOrderService{
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Order saveOrder(Order order) {
         try {
             Order save = orderRepository.save(order);
@@ -72,13 +71,12 @@ public class ProductOrderServiceImpl implements ProductOrderService{
 
     }
 
-    //@Transactional(propagation = Propagation.REQUIRES_NEW)
     protected List<OrderResponse> saveOrderRecord(List<ProductOrderRequest> product) {
         Order order = getOrder(product.getFirst().getOrder().getId());
         List<ProductOrder> orderList = product.stream().map(p ->
              new ProductOrder(order, p.getProduct(), p.getOrderItemCnt(), OrderState.ORDER)
         ).collect(Collectors.toList());
-        //productOrderRepository.flush();
+        productOrderRepository.flush();
         return productOrderRepository.saveAll(orderList).stream().map(po->
             ProductOrderResponse.newProductOrderResponse(po.getOrder().getId(), po.getProduct().getId(), po.getProduct().getProductName(), po.getItemCount())
         ).collect(Collectors.toList());
