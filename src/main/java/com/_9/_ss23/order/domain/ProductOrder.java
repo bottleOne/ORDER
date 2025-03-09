@@ -1,5 +1,6 @@
 package com._9._ss23.order.domain;
 
+import com._9._ss23.order.code.DeliveryJudgment;
 import com._9._ss23.order.code.OrderState;
 import com._9._ss23.product.domain.Product;
 import jakarta.persistence.*;
@@ -13,6 +14,9 @@ public class ProductOrder {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id @Column(name = "product_order_id")
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private DeliveryJudgment deliveryPay;
 
     private int itemCount;
 
@@ -29,11 +33,15 @@ public class ProductOrder {
 
     @Version
     private Long version;
-    public ProductOrder(Order order, Product product, int itemCount, OrderState orderState){
+    private ProductOrder(Order order, Product product, int itemCount, OrderState orderState){
         this.order = order;
         this.product = product;
         this.itemCount = itemCount;
         this.orderState = orderState;
         order.addProductOrder(this);
+    }
+
+    public static ProductOrder readyToOrder(Order order, Product product, int itemCount){
+        return new ProductOrder(order, product, itemCount, OrderState.ORDER);
     }
 }

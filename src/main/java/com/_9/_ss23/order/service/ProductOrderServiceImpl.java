@@ -1,6 +1,7 @@
 package com._9._ss23.order.service;
 
 import com._9._ss23.order.OrderException;
+import com._9._ss23.order.code.DeliveryJudgment;
 import com._9._ss23.order.code.OrderState;
 import com._9._ss23.order.domain.Order;
 import com._9._ss23.order.domain.ProductOrder;
@@ -33,12 +34,12 @@ public class ProductOrderServiceImpl implements ProductOrderService{
     private final ProductOrderRepository productOrderRepository;
     @Override
     public List<OrderResponse> order(List<ProductOrderRequest> productOrderRequests) {
-
-        Order order = new Order(LocalDateTime.now());
-        Order savedOrder = saveOrder(order);
+        Order savedOrder = saveOrder( Order.createOrder());
 
         productOrderRequests.stream().forEach(po->po.setOrder(savedOrder));
-        return saveOrderRecord(productOrderRequests);
+        List<OrderResponse> orderResponses = saveOrderRecord(productOrderRequests);
+        checkDeliveryPay(savedOrder);
+        return orderResponses;
     }
 
     @Override
@@ -74,11 +75,22 @@ public class ProductOrderServiceImpl implements ProductOrderService{
     protected List<OrderResponse> saveOrderRecord(List<ProductOrderRequest> product) {
         Order order = getOrder(product.getFirst().getOrder().getId());
         List<ProductOrder> orderList = product.stream().map(p ->
-             new ProductOrder(order, p.getProduct(), p.getOrderItemCnt(), OrderState.ORDER)
+              ProductOrder.readyToOrder(order, p.getProduct(), p.getOrderItemCnt())
         ).collect(Collectors.toList());
-        productOrderRepository.flush();
-        return productOrderRepository.saveAll(orderList).stream().map(po->
-            ProductOrderResponse.newProductOrderResponse(po.getOrder().getId(), po.getProduct().getId(), po.getProduct().getProductName(), po.getItemCount())
-        ).collect(Collectors.toList());
+
+        return productOrderRepository.saveAll(orderList).stream().map(po ->
+                ProductOrderResponse.newProductOrderResponse(po.getOrder().getId(), po.getProduct().getId(), po.getProduct().getProductName(), po.getItemCount())
+        ).collect(Collectors.toList());;
+    }
+
+    private void checkDeliveryPay(Order order){
+        int totalPrice = 0;
+        List<ProductOrder> productOrders = order.getProductOrders();
+       for(ProductOrder pOrder : productOrders){
+           totalPrice += pOrder.getProduct().getProductPrice();
+       }
+        DeliveryJudgment deliveryPay = DeliveryJudgment.deliveryFee(DeliveryJudgment.BASICDELIVERYFEE, totalPrice);
+
+       order.setDeliveryPay(deliveryPay);
     }
 }

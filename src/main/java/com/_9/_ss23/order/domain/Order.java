@@ -1,5 +1,6 @@
 package com._9._ss23.order.domain;
 
+import com._9._ss23.order.code.DeliveryJudgment;
 import com._9._ss23.order.domain.ProductOrder;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,10 +21,15 @@ public class Order {
     private List<ProductOrder> productOrders;
     private LocalDateTime orderDate;
     private LocalDateTime cancelDate;
+    private DeliveryJudgment deliveryPay;
     @Version
     private Long version;
-    public Order(LocalDateTime orderDate){
+    private Order(LocalDateTime orderDate){
         this.orderDate = orderDate;
+    }
+
+    public static Order createOrder(){
+        return new Order(LocalDateTime.now());
     }
 
     public void addProductOrder(ProductOrder productOrder) {
@@ -31,5 +37,9 @@ public class Order {
             this.productOrders = new ArrayList<>();
         }
         this.productOrders.add(productOrder);
+    }
+
+    public void setDeliveryPay(DeliveryJudgment deliveryPay){
+        this.deliveryPay = deliveryPay;
     }
 }
