@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Time Leap</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #222; color: white; }
+        .container {  display: flex;
+            justify-content: center;  /* 가로 중앙 정렬 */
+            align-items: center;
+            flex-direction: column;/* 세로 중앙 정렬 */ /* 화면 전체 높이 사용 */}
+        table {
+            border-collapse: collapse; /* 테이블 크기 지정 */
+            border-bottom-color: white ;
+            text-align: center;       /* 테이블 내부 텍스트 중앙 정렬 */
+        }
+        .time { font-size: 2em; margin: 20px 0; }
+        .button { background: #ff9900; padding: 10px 20px; border: none; font-size: 1.2em; cursor: pointer; }
+        .button:hover { background: #cc7700; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1> 상품주문 </h1>
+    <div class="itemList">
+        <form action="/orderPage" method="GET">
+            <table>
+                <thead  style="text-align: center">
+                <tr>
+                    <th>Product Number</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+                </thead>
+                <tbody  style="text-align: center">
+                <tr th:each="product : ${products}">
+                    <td th:text="${product.productNumber}"></td>
+                    <td th:text="${product.productName}"></td>
+                    <td th:text="${product.productPrice}"></td>
+                    <td th:text="${product.productQuantity}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+        <div>
+            <ul id="inputList"></ul>
+        </div>
+
+        <div>
+            <ul id="successList"></ul>
+        </div>
+
+        <form action="/orderPage/order" method="post">
+            <div class="orderItmes" style="margin-top: 20px">
+                <div>
+                    상품번호: <input type="text" name="productNumbers" id="product">
+                </div>
+                <div>
+                    상품수량: <input type="text" name="quantities" id="quantity" onkeydown="handleKeyPress(event)">
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+</body>
+<script>
+    let inputValues = [];
+    let currentInputType = "product"; // 현재 입력 유형 ('product' or 'quantity')
+
+    function handleKeyPress(e) {
+        console.log(e.keyCode);
+
+
+        if(e.keyCode === 13){
+            const product = document.getElementById("product").value.trim();
+            const quantity = document.getElementById("quantity").value.trim();
+
+            if (product === "" && quantity === "") {
+                sendData(inputValues);
+            }else{
+                updateInputList(product, quantity);
+            }
+        }
+    }
+
+    async function sendData(data) {
+        try {
+            const response = await fetch("/orderPage/order", {
+                method: "POST", // POST 요청
+                headers: {
+                    "Content-Type": "application/json" // JSON 형식
+                },
+                body: JSON.stringify(data) // 객체를 JSON 문자열로 변환하여 전송
+            });
+
+            if (!response.ok) {
+                throw new Error(`서버 오류: ${response.status}`);
+            }
+            alert("주문완료");
+            const result = await response.json()
+            success(result);
+        } catch (error) {
+            console.error("데이터 전송 중 오류 발생:", error);
+            return null;
+        }
+    }
+    function updateInputList(productNumber, quantity) {
+        const successList = document.getElementById("successList");
+        successList.innerHTML = "";
+
+        const product = {
+            productNumber : productNumber,
+            productQuantity: quantity
+        }
+        const list = document.getElementById("inputList");
+        inputValues.push(product);
+
+        let li = document.createElement("li");
+        li.textContent = `상품번호: ${product.productNumber} | 수량: ${product.productQuantity}`;
+        list.appendChild(li);
+
+       document.getElementById("product").value = "";
+       document.getElementById("quantity").value = "";
+       document.getElementById("product").focus();
+    }
+
+    function success(product) {
+
+        const inputList = document.getElementById("inputList");
+        inputList.innerHTML = "";
+
+        const list = document.getElementById("successList");
+        inputValues = [];
+
+        for(var i=0; i<product.responses.length; i++){
+            let li = document.createElement("li");
+            li.textContent = `상품이름: ${product.responses[i].itemNm} | 수량: ${product.responses[i].orderedItemCount}개`;
+            list.appendChild(li);
+        }
+
+        let li = document.createElement("li");
+        li.textContent = "주문금액:"  + product.totalPrice +"원 | 결제금액: " + (product.totalPrice + product.deliveryFee) + "원";
+        list.appendChild(li);
+
+        document.getElementById("product").value = "";
+        document.getElementById("quantity").value = "";
+        document.getElementById("product").focus();
+    }
+</script>
+</html>

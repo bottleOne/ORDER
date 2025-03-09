@@ -2,21 +2,18 @@ package com._9._ss23.order.service;
 
 import com._9._ss23.order.OrderException;
 import com._9._ss23.order.code.DeliveryJudgment;
-import com._9._ss23.order.code.OrderState;
 import com._9._ss23.order.domain.Order;
 import com._9._ss23.order.domain.ProductOrder;
 import com._9._ss23.order.dto.OrderResponse;
 import com._9._ss23.order.dto.ProductOrderRequest;
 import com._9._ss23.order.repoditory.OrderRepository;
 import com._9._ss23.order.repoditory.ProductOrderRepository;
-import com._9._ss23.product.domain.Product;
 import com._9._ss23.product.domain.ProductOrderResponse;
-import com._9._ss23.product.service.ProductService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -37,14 +34,16 @@ public class ProductOrderServiceImpl implements ProductOrderService{
         Order savedOrder = saveOrder( Order.createOrder());
 
         productOrderRequests.stream().forEach(po->po.setOrder(savedOrder));
+
         List<OrderResponse> orderResponses = saveOrderRecord(productOrderRequests);
         checkDeliveryPay(savedOrder);
+
         return orderResponses;
     }
 
     @Override
-    public List<Order> getOrders(List<Long> ids) {
-        return orderRepository.findAllById(ids);
+    public List<Order> getOrders() {
+        return orderRepository.findAll();
     }
 
     @Override
@@ -57,6 +56,20 @@ public class ProductOrderServiceImpl implements ProductOrderService{
             log.error("주문조회 동시성충돌");
             return getOrder(orderId);
         }
+    }
+
+    @Override
+    public int getTotalPrice(OrderResponse responses) {
+        Long orderId = responses.getOrderId();
+        Order order = getOrder(orderId);
+       return order.getTotalPrice();
+    }
+
+    @Override
+    public int getDeliveryFee(OrderResponse responses) {
+        Long orderId = responses.getOrderId();
+        Order order = getOrder(orderId);
+       return order.getDeliveryPay().getFee();
     }
 
     @Override
@@ -80,7 +93,7 @@ public class ProductOrderServiceImpl implements ProductOrderService{
 
         return productOrderRepository.saveAll(orderList).stream().map(po ->
                 ProductOrderResponse.newProductOrderResponse(po.getOrder().getId(), po.getProduct().getId(), po.getProduct().getProductName(), po.getItemCount())
-        ).collect(Collectors.toList());;
+        ).collect(Collectors.toList());
     }
 
     private void checkDeliveryPay(Order order){
@@ -90,7 +103,7 @@ public class ProductOrderServiceImpl implements ProductOrderService{
            totalPrice += pOrder.getProduct().getProductPrice();
        }
         DeliveryJudgment deliveryPay = DeliveryJudgment.deliveryFee(DeliveryJudgment.BASICDELIVERYFEE, totalPrice);
-
-       order.setDeliveryPay(deliveryPay);
+        order.setTotalPrice(totalPrice);
+        order.setDeliveryPay(deliveryPay);
     }
 }

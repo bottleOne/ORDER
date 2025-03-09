@@ -10,8 +10,9 @@ public enum DeliveryJudgment {
     private int standard;
     private int fee;
 
-    DeliveryJudgment(int standard, int i) {
+    DeliveryJudgment(int standard, int fee) {
         this.standard = standard;
+        this.fee = fee;
     }
 
     public static DeliveryJudgment deliveryFee(DeliveryJudgment deliveryJudgment ,int totalPrice){

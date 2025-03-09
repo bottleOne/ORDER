@@ -8,7 +8,7 @@ import java.util.List;
 public interface OrderService<T> {
 
     List<OrderResponse> order(List<T> item);
-    List<Order> getOrders(List<Long> ids);
+    List<Order> getOrders();
     Order getOrder(Long orderId);
     Order saveOrder(Order order);
 

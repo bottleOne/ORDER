@@ -14,6 +14,7 @@ public class OrderRequest {
         this.orderItemCnt = orderItemCnt;
     }
 
+
     public Long getItemNumber(){
         return this.itemNumber;
     }

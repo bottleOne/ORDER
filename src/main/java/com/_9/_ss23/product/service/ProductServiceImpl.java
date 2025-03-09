@@ -32,13 +32,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Product getProduct(Long productNum)  {
-        //try {
             return productRepository.findById(productNum).get();
-        /*}catch (ObjectOptimisticLockingFailureException e){
-            log.error("동시성이슈 발생123");
-            //TimeUnit.MILLISECONDS.sleep(1000);
-            return getProduct(productNum);
-        }*/
     }
 
     @Override

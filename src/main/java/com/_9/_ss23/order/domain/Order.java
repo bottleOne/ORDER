@@ -21,11 +21,16 @@ public class Order {
     private List<ProductOrder> productOrders;
     private LocalDateTime orderDate;
     private LocalDateTime cancelDate;
+    @Enumerated(EnumType.STRING)
     private DeliveryJudgment deliveryPay;
+    @Column(name = "total_price", nullable = true)
+    private int totalPrice;
     @Version
     private Long version;
     private Order(LocalDateTime orderDate){
         this.orderDate = orderDate;
+        this.totalPrice = 0;
+        this.deliveryPay = DeliveryJudgment.NONDELIVERYFEE;
     }
 
     public static Order createOrder(){
@@ -42,4 +47,5 @@ public class Order {
     public void setDeliveryPay(DeliveryJudgment deliveryPay){
         this.deliveryPay = deliveryPay;
     }
+    public void setTotalPrice(int totalPrice){this.totalPrice = totalPrice;}
 }

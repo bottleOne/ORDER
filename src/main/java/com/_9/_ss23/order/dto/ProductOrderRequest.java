@@ -16,6 +16,9 @@ public class ProductOrderRequest extends OrderRequest{
         super(itemNumber, orderItemCnt);
     }
 
+    public static ProductOrderRequest create(Long itemNumber, int orderItemCnt){
+        return new ProductOrderRequest(itemNumber, orderItemCnt);
+    }
     @Override
     public Long getItemNumber() {
         return super.getItemNumber();

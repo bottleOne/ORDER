@@ -1,12 +1,13 @@
 package com._9._ss23.product.dto;
 
+import com._9._ss23.order.dto.OrderResponse;
 import com._9._ss23.product.domain.Product;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.List;
 
 @Getter @Setter
+@NoArgsConstructor
 public class ProductDto {
     private Long productNumber;
 
@@ -16,14 +17,20 @@ public class ProductDto {
 
     private int productQuantity;
 
-    private int orderCount;
+    private int totalPrice;
 
+    private int deliveryFee;
+
+    private List<OrderResponse> responseList;
+    public ProductDto(Long productNumber, int productQuantity){
+        this.productNumber = productNumber;
+        this.productQuantity = productQuantity;
+    }
     public ProductDto(Long productNumber, String productName, int productPrice, int productQuantity) {
         this.productNumber = productNumber;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
-        this.orderCount = 0;
     }
 
     public static ProductDto to(Product product){
@@ -33,8 +40,4 @@ public class ProductDto {
                 product.getProductQuantity());
     }
 
-    public ProductDto setOrderCount(int orderCount){
-        this.orderCount = orderCount;
-        return this;
-    }
 }

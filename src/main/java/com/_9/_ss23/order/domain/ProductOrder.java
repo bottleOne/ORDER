@@ -15,9 +15,6 @@ public class ProductOrder {
     @Id @Column(name = "product_order_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private DeliveryJudgment deliveryPay;
-
     private int itemCount;
 
     @Enumerated(EnumType.STRING)
