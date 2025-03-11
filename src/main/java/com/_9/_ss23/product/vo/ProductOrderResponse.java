@@ -1,6 +1,6 @@
-package com._9._ss23.product.domain;
+package com._9._ss23.product.vo;
 
-import com._9._ss23.order.dto.OrderResponse;
+import com._9._ss23.order.vo.OrderResponse;
 import lombok.*;
 
 @Getter @Setter

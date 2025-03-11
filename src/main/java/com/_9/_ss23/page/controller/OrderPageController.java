@@ -1,8 +1,8 @@
 package com._9._ss23.page.controller;
 
-import com._9._ss23.order.dto.OrderResponse;
+import OrderPageService;
 import com._9._ss23.page.dto.OrderDto;
-import com._9._ss23.product.dto.ProductDto;
+import com._9._ss23.product.vo.ProductDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

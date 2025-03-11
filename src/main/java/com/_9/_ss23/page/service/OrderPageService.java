@@ -1,8 +1,7 @@
-package com._9._ss23.page.controller;
+package com._9._ss23.page.service;
 
-import com._9._ss23.order.dto.OrderResponse;
 import com._9._ss23.page.dto.OrderDto;
-import com._9._ss23.product.dto.ProductDto;
+import com._9._ss23.product.vo.ProductDto;
 
 import java.util.List;
 

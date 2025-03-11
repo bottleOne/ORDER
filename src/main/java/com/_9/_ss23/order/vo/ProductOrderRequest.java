@@ -1,10 +1,8 @@
-package com._9._ss23.order.dto;
+package com._9._ss23.order.vo;
 
 import com._9._ss23.order.domain.Order;
 import com._9._ss23.product.domain.Product;
 import lombok.*;
-
-import java.util.List;
 
 @Getter @Setter
 public class ProductOrderRequest extends OrderRequest{

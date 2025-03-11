@@ -1,4 +1,4 @@
-package com._9._ss23.order.dto;
+package com._9._ss23.order.vo;
 
 import lombok.Getter;
 import lombok.Setter;

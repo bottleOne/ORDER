@@ -4,11 +4,11 @@ import com._9._ss23.order.OrderException;
 import com._9._ss23.order.code.DeliveryJudgment;
 import com._9._ss23.order.domain.Order;
 import com._9._ss23.order.domain.ProductOrder;
-import com._9._ss23.order.dto.OrderResponse;
-import com._9._ss23.order.dto.ProductOrderRequest;
+import com._9._ss23.order.vo.OrderResponse;
+import com._9._ss23.order.vo.ProductOrderRequest;
 import com._9._ss23.order.repoditory.OrderRepository;
 import com._9._ss23.order.repoditory.ProductOrderRepository;
-import com._9._ss23.product.domain.ProductOrderResponse;
+import com._9._ss23.product.vo.ProductOrderResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,6 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,19 +57,7 @@ public class ProductOrderServiceImpl implements ProductOrderService{
         }
     }
 
-    @Override
-    public int getTotalPrice(OrderResponse responses) {
-        Long orderId = responses.getOrderId();
-        Order order = getOrder(orderId);
-       return order.getTotalPrice();
-    }
 
-    @Override
-    public int getDeliveryFee(OrderResponse responses) {
-        Long orderId = responses.getOrderId();
-        Order order = getOrder(orderId);
-       return order.getDeliveryPay().getFee();
-    }
 
     @Override
     public Order saveOrder(Order order) {

@@ -1,12 +1,11 @@
 package com._9._ss23;
 
-import com._9._ss23.order.dto.OrderResponse;
-import com._9._ss23.order.dto.ProductOrderRequest;
+import com._9._ss23.order.vo.OrderResponse;
+import com._9._ss23.order.vo.ProductOrderRequest;
 import com._9._ss23.order.process.ProductOrderProcess;
 import com._9._ss23.product.domain.Product;
 import com._9._ss23.product.service.ProductService;
 import com._9._ss23.sale.service.ProductSaleServiceImpl;
-import com._9._ss23.sale.service.SaleService;
 
 
 import org.junit.jupiter.api.Test;

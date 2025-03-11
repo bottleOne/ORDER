@@ -1,6 +1,6 @@
 package com._9._ss23.page.dto;
 
-import com._9._ss23.order.dto.OrderResponse;
+import com._9._ss23.order.vo.OrderResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

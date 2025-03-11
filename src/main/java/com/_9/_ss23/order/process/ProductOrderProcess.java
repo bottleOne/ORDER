@@ -1,8 +1,9 @@
 package com._9._ss23.order.process;
 
 
-import com._9._ss23.order.dto.OrderResponse;
-import com._9._ss23.order.dto.ProductOrderRequest;
+import com._9._ss23.order.code.OrderType;
+import com._9._ss23.order.vo.OrderResponse;
+import com._9._ss23.order.vo.ProductOrderRequest;
 import com._9._ss23.order.service.ProductOrderService;
 import com._9._ss23.product.domain.Product;
 import com._9._ss23.product.service.ProductService;
@@ -50,5 +51,10 @@ public class ProductOrderProcess extends AbstractProductOrderProcess<ProductOrde
         request.setProduct(product);
 
         return request;
+    }
+
+    @Override
+    public boolean is(OrderType orderType) {
+        return orderType.equals(OrderType.BASIC);
     }
 }

@@ -1,7 +1,7 @@
 package com._9._ss23.order.service;
 
 import com._9._ss23.order.domain.Order;
-import com._9._ss23.order.dto.OrderResponse;
+import com._9._ss23.order.vo.OrderResponse;
 
 import java.util.List;
 
