@@ -51,7 +51,7 @@ public class testOrderProcess {
 
         orderResponses.stream().forEach(o ->{
             ProductOrderRequest productOrderRequest = requests.stream().filter(r -> r.getItemNumber().equals(o.getItemId())).findFirst().get();
-            assertEquals(o.getItemId(), productOrderRequest.getItemNumber());
+            assertNotEquals(o.getItemId(), productOrderRequest.getItemNumber());
         } );
     }
 
