@@ -48,7 +48,7 @@ public class testOrderProcess {
 
         List<OrderResponse> orderResponses = orderProcess.orderProcess(requests);
         saleService.sale(orderResponses);
-
+        //test
         orderResponses.stream().forEach(o ->{
             ProductOrderRequest productOrderRequest = requests.stream().filter(r -> r.getItemNumber().equals(o.getItemId())).findFirst().get();
             assertNotEquals(o.getItemId(), productOrderRequest.getItemNumber());
