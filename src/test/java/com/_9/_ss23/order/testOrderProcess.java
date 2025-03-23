@@ -1,4 +1,4 @@
-package com._9._ss23;
+package com._9._ss23.order;
 
 import com._9._ss23.order.vo.OrderResponse;
 import com._9._ss23.order.vo.ProductOrderRequest;
