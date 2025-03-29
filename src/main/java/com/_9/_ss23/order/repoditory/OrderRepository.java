@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     //@Lock(LockModeType.OPTIMISTIC)
     Order save(Order order);
-    //@Lock(LockModeType.OPTIMISTIC)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Order> findById(Long id);
 }
