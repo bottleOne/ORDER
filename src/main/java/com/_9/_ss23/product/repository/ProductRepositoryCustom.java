@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Lock;
 import java.util.List;
 
 public interface ProductRepositoryCustom {
-@Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Product> selectProducts(List<Long> productNum);
 }
